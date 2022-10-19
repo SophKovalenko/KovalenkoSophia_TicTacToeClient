@@ -18,6 +18,21 @@ public class NetworkedClient : MonoBehaviour
     bool isConnected = false;
     int ourClientID;
 
+    private GameStates currentState;
+
+    private string UserName;
+    private string Password;
+
+    public InputField newUserName;
+    public InputField newPassWord;
+    public InputField existingUserName;
+    public InputField existingPassWord;
+
+    public GameObject currentUI = GameObject.FindGameObjectWithTag("LoginPanel");
+    public GameObject currentUI2 = GameObject.FindGameObjectWithTag("NewAccountPanel");
+
+    public GameObject newUI;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -113,5 +128,36 @@ public class NetworkedClient : MonoBehaviour
         return isConnected;
     }
 
+    public void VerifyExistingAccount()
+    {
+        existingUserName.text = UserName;
+        existingPassWord.text = Password;
 
+        if (currentState == GameStates.RunState)
+        {
+            newUI = GameObject.FindGameObjectWithTag("SuccessfulLoginPanel");
+
+            currentUI.SetActive(false);
+            currentUI2.SetActive(false);
+
+            newUI.SetActive(true); 
+        }
+
+    }
+    public void CreateNewAccount()
+    {
+        newUserName.text = UserName;
+        newPassWord.text = Password;
+
+        if (currentState == GameStates.RunState)
+        {
+            newUI = GameObject.FindGameObjectWithTag("AccountCreatedPanel");
+
+            currentUI.SetActive(false);
+            currentUI2.SetActive(false);
+
+            newUI.SetActive(true);
+        }
+
+    }
 }
