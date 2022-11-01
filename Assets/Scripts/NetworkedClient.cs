@@ -23,7 +23,6 @@ public class NetworkedClient : MonoBehaviour
 
     private string UserName;
     private string PassWord;
-    public string infoSentToHost = "Hello";
 
     public TMP_InputField newUserName;
     public TMP_InputField newPassWord;
@@ -35,7 +34,6 @@ public class NetworkedClient : MonoBehaviour
 
     private GameObject currentUI;
     private GameObject currentUI2;
-
     public GameObject newUI;
     public GameObject newUI2;
 
@@ -46,8 +44,6 @@ public class NetworkedClient : MonoBehaviour
         currentUI2 = GameObject.FindGameObjectWithTag("NewAccountPanel");
 
         currentState = GameStates.StartState;
-
-        //    Connect(); 
     }
 
     // Update is called once per frame
@@ -58,7 +54,7 @@ public class NetworkedClient : MonoBehaviour
             Connect();
 
             if (Input.GetKeyDown(KeyCode.S))
-                SendMessageToHost("Hello From Client");
+                SendMessageToHost("" + UserName);
 
             UpdateNetworkConnection();
         }
@@ -111,7 +107,7 @@ public class NetworkedClient : MonoBehaviour
             hostID = NetworkTransport.AddHost(topology, 0);
             Debug.Log("Socket open.  Host ID = " + hostID);
 
-            connectionID = NetworkTransport.Connect(hostID, "10.0.235.161", socketPort, 0, out error); // server is local on network
+            connectionID = NetworkTransport.Connect(hostID, "192.168.0.107", socketPort, 0, out error); // server is local on network
 
             if (error == 0)
             {
@@ -119,6 +115,8 @@ public class NetworkedClient : MonoBehaviour
 
                 Debug.Log("Connected, id = " + connectionID);
 
+                PlayerPrefs.SetString("" + UserName + connectionID, UserName + "," + connectionID);
+                Debug.Log(PlayerPrefs.GetString("" + UserName + connectionID));
             }
         }
     }
@@ -166,6 +164,7 @@ public class NetworkedClient : MonoBehaviour
             Debug.Log("Username already exists, please choose another!");
         }
 
+        //Clear the input fields
         newUserName.text = "";
         newPassWord.text = "";
     }
@@ -193,6 +192,7 @@ public class NetworkedClient : MonoBehaviour
             Debug.Log("Username or password is incorrect. Please try again or create an account!");
         }
         
+        //Clear the input fields
         existingUserName.text = "";
         existingPassWord.text = "";
 
@@ -200,22 +200,28 @@ public class NetworkedClient : MonoBehaviour
 
     public void VerifyExistingAccount()
     {
+        //Switch state to run state
         currentState = GameStates.RunState;
 
+        //Hide main menu UI
         currentUI.SetActive(false);
         currentUI2.SetActive(false);
 
+        //Enable new UI
         newUI.SetActive(true); 
     }
     public void CreateNewAccount()
     {
+        //Hide main menu UI
         currentUI.SetActive(false);
         currentUI2.SetActive(false);
 
+        //Enable new UI
         newUI2.SetActive(true);
     }
     public void ReturnToMenu()
     {
+        //If new account created UI is active and we want to close it and return to menu
         if (newUI2.activeInHierarchy == true )
         {
             newUI2.SetActive(false);
