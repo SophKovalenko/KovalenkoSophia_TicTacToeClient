@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -21,31 +22,46 @@ public class NetworkedClient : MonoBehaviour
     private GameStates currentState;
 
     private string UserName;
-    private string Password;
+    private string PassWord;
+    public string infoSentToHost = "Hello";
 
-    public InputField newUserName;
-    public InputField newPassWord;
-    public InputField existingUserName;
-    public InputField existingPassWord;
+    public TMP_InputField newUserName;
+    public TMP_InputField newPassWord;
+    public TMP_InputField existingUserName;
+    public TMP_InputField existingPassWord;
 
-    public GameObject currentUI = GameObject.FindGameObjectWithTag("LoginPanel");
-    public GameObject currentUI2 = GameObject.FindGameObjectWithTag("NewAccountPanel");
+    public Button loginButton;
+    public Button createAccountButton;
+
+    private GameObject currentUI;
+    private GameObject currentUI2;
 
     public GameObject newUI;
+    public GameObject newUI2;
 
     // Start is called before the first frame update
     void Start()
     {
-        Connect();
+        currentUI = GameObject.FindGameObjectWithTag("LoginPanel");
+        currentUI2 = GameObject.FindGameObjectWithTag("NewAccountPanel");
+
+        currentState = GameStates.StartState;
+
+        //    Connect(); 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
-            SendMessageToHost("Hello from client");
+        if (currentState == GameStates.RunState)
+        {
+            Connect();
 
-        UpdateNetworkConnection();
+            if (Input.GetKeyDown(KeyCode.S))
+                SendMessageToHost("Hello From Client");
+
+            UpdateNetworkConnection();
+        }
     }
 
     private void UpdateNetworkConnection()
@@ -69,7 +85,7 @@ public class NetworkedClient : MonoBehaviour
                 case NetworkEventType.DataEvent:
                     string msg = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
                     ProcessRecievedMsg(msg, recConnectionID);
-                    //Debug.Log("got msg = " + msg);
+                    Debug.Log("got msg = " + msg);
                     break;
                 case NetworkEventType.DisconnectEvent:
                     isConnected = false;
@@ -128,36 +144,83 @@ public class NetworkedClient : MonoBehaviour
         return isConnected;
     }
 
-    public void VerifyExistingAccount()
+    public void MakeNewUsernameAndPassword()
     {
-        existingUserName.text = UserName;
-        existingPassWord.text = Password;
+        UserName = newUserName.text;
+        PassWord = newPassWord.text;
 
-        if (currentState == GameStates.RunState)
+        //Save the login to playerPrefs if it doesnt already exist
+        if (PlayerPrefs.HasKey("" + UserName) == false)
         {
-            newUI = GameObject.FindGameObjectWithTag("SuccessfulLoginPanel");
+            PlayerPrefs.SetString("" + UserName, UserName);
+            Debug.Log(UserName);
 
-            currentUI.SetActive(false);
-            currentUI2.SetActive(false);
+            //Save the password to playerPrefs
+            PlayerPrefs.SetString("" + PassWord, PassWord);
+            Debug.Log(PassWord);
 
-            newUI.SetActive(true); 
+            CreateNewAccount();
+        }
+        else if (PlayerPrefs.HasKey("" + UserName) == true)
+        {
+            Debug.Log("Username already exists, please choose another!");
         }
 
+        newUserName.text = "";
+        newPassWord.text = "";
+    }
+
+    public void GetExisitingUsernameAndPassword()
+    {
+        //Get the login from playerPrefs
+        UserName = existingUserName.text;
+
+        //Get the password from playerPrefs
+        PassWord = existingPassWord.text;
+
+        if (PlayerPrefs.HasKey("" + UserName) == true && PlayerPrefs.HasKey("" + PassWord) == true)
+        {
+            PlayerPrefs.GetString("" + UserName, UserName);
+            Debug.Log(UserName);
+
+            PlayerPrefs.GetString("" + PassWord, PassWord);
+            Debug.Log(PassWord);
+
+            VerifyExistingAccount();
+        }
+        else if (PlayerPrefs.HasKey("" + UserName) == false || PlayerPrefs.HasKey("" + PassWord) == false)
+        {
+            Debug.Log("Username or password is incorrect. Please try again or create an account!");
+        }
+        
+        existingUserName.text = "";
+        existingPassWord.text = "";
+
+    }
+
+    public void VerifyExistingAccount()
+    {
+        currentState = GameStates.RunState;
+
+        currentUI.SetActive(false);
+        currentUI2.SetActive(false);
+
+        newUI.SetActive(true); 
     }
     public void CreateNewAccount()
     {
-        newUserName.text = UserName;
-        newPassWord.text = Password;
+        currentUI.SetActive(false);
+        currentUI2.SetActive(false);
 
-        if (currentState == GameStates.RunState)
+        newUI2.SetActive(true);
+    }
+    public void ReturnToMenu()
+    {
+        if (newUI2.activeInHierarchy == true )
         {
-            newUI = GameObject.FindGameObjectWithTag("AccountCreatedPanel");
-
-            currentUI.SetActive(false);
-            currentUI2.SetActive(false);
-
-            newUI.SetActive(true);
+            newUI2.SetActive(false);
+            currentUI.SetActive(true);
+            currentUI2.SetActive(true);
         }
-
     }
 }

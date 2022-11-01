@@ -8,6 +8,10 @@ TagManager:
   - NewAccountPanel
   - SuccessfulLoginPanel
   - AccountCreatedPanel
+  - LoginUsername
+  - LoginPassword
+  - NewUsername
+  - NewPassword
   layers:
   - Default
   - TransparentFX

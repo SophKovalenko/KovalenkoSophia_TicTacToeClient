@@ -405,7 +405,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 64237886}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1154070639}
+        m_TargetAssemblyTypeName: NetworkedClient, Assembly-CSharp
+        m_MethodName: ReturnToMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &64237886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -457,7 +469,7 @@ GameObject:
   - component: {fileID: 64901343}
   - component: {fileID: 64901342}
   m_Layer: 5
-  m_Name: CreateAccount
+  m_Name: CreateAccountButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -526,7 +538,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 64901343}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1154070639}
+        m_TargetAssemblyTypeName: NetworkedClient, Assembly-CSharp
+        m_MethodName: MakeNewUsernameAndPassword
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &64901343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2118,7 +2142,7 @@ RectTransform:
   m_Children:
   - {fileID: 131559847}
   m_Father: {fileID: 1088880768}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2835,7 +2859,7 @@ GameObject:
   - component: {fileID: 987218891}
   m_Layer: 5
   m_Name: ExisitingAccountLogin
-  m_TagString: Untagged
+  m_TagString: LoginUsername
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3010,7 +3034,7 @@ GameObject:
   - component: {fileID: 992131514}
   m_Layer: 5
   m_Name: ExisitingAccountPassword
-  m_TagString: Untagged
+  m_TagString: LoginPassword
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3253,7 +3277,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1002951913}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1154070639}
+        m_TargetAssemblyTypeName: NetworkedClient, Assembly-CSharp
+        m_MethodName: Disconnect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1002951913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3375,13 +3411,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: b5307224ddd0afc41b74620e829baa32, type: 3}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1154070639}
+        m_TargetAssemblyTypeName: NetworkedClient, Assembly-CSharp
+        m_MethodName: GetExisitingUsernameAndPassword
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3456,8 +3492,8 @@ RectTransform:
   m_Children:
   - {fileID: 220224839}
   - {fileID: 64901341}
-  - {fileID: 709282660}
   - {fileID: 1989317929}
+  - {fileID: 709282660}
   - {fileID: 2142508021}
   - {fileID: 1951125797}
   m_Father: {fileID: 1561532089}
@@ -3669,6 +3705,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5307224ddd0afc41b74620e829baa32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  infoSentToHost: 
+  newUserName: {fileID: 1989317930}
+  newPassWord: {fileID: 709282661}
+  existingUserName: {fileID: 987218891}
+  existingPassWord: {fileID: 992131514}
+  loginButton: {fileID: 1007941118}
+  createAccountButton: {fileID: 64901342}
+  newUI: {fileID: 391241770}
+  newUI2: {fileID: 2028194297}
 --- !u!4 &1154070640
 Transform:
   m_ObjectHideFlags: 0
@@ -4315,7 +4360,7 @@ RectTransform:
   m_Children:
   - {fileID: 224845465}
   m_Father: {fileID: 1088880768}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
