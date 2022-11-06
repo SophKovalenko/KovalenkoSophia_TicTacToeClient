@@ -36,9 +36,10 @@ public class NetworkedClient : MonoBehaviour
     public Button loginButton;
     public Button createAccountButton;
 
-    private GameObject currentUI;
-    public GameObject newUI;
-    public GameObject newUI2;
+    private GameObject mainMenuUI;
+    public GameObject successfulLoginUI;
+    public GameObject accountCreatedUI;
+    public GameObject wrongPasswordUI;
 
     string loginStatus;
     bool loggedIntoAccount = false;
@@ -46,7 +47,7 @@ public class NetworkedClient : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentUI = GameObject.FindGameObjectWithTag("LoginPanel");
+        mainMenuUI = GameObject.FindGameObjectWithTag("LoginPanel");
 
         currentState = GameStates.StartState;
 
@@ -126,6 +127,7 @@ public class NetworkedClient : MonoBehaviour
     public void Disconnect()
     {
         NetworkTransport.Disconnect(hostID, connectionID, out error);
+        Debug.Log("Disconnecting from server");
     }
 
     public void SendMessageToHost(string msg)
@@ -148,6 +150,7 @@ public class NetworkedClient : MonoBehaviour
         else if (loginStatus == "False")
         {
             loggedIntoAccount = false;
+            wrongPasswordUI.SetActive(true);
         }
     }
 
@@ -177,15 +180,30 @@ public class NetworkedClient : MonoBehaviour
         SendMessageToHost("" + UserName + "," + PassWord);
     }
 
+    public void CreateAccount()
+    {
+        GetUsernameAndPassword();
+        SendMessageToHost("" + UserName + "," + PassWord);
+
+        if (wrongPasswordUI.activeInHierarchy != true)
+        { accountCreatedUI.SetActive(true); }
+    }
+
     public void StartGameLobby()
     {
         //Switch state to run state
-         currentState = GameStates.RunState;
+        currentState = GameStates.RunState;
 
         //Hide main menu UI
-        currentUI.SetActive(false);
+        mainMenuUI.SetActive(false);
 
         //Enable new UI
-        newUI.SetActive(true);
+        successfulLoginUI.SetActive(true);
+    }
+
+    public void ClosePopupWindow()
+    {
+        wrongPasswordUI.SetActive(false);
+        accountCreatedUI.SetActive(false);
     }
 }
