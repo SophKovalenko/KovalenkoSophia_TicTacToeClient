@@ -37,9 +37,11 @@ public class NetworkedClient : MonoBehaviour
     public Button createAccountButton;
 
     private GameObject currentUI;
-    private GameObject currentUI2;
     public GameObject newUI;
     public GameObject newUI2;
+
+    string loginStatus;
+    bool loggedIntoAccount = false;
 
     // Start is called before the first frame update
     void Start()
@@ -55,6 +57,12 @@ public class NetworkedClient : MonoBehaviour
     void Update()
     {
         UpdateNetworkConnection();
+
+        if (loggedIntoAccount == true)
+        {
+            StartGameLobby();
+            loggedIntoAccount = false;
+        }
     }
 
     private void UpdateNetworkConnection()
@@ -129,6 +137,18 @@ public class NetworkedClient : MonoBehaviour
     private void ProcessRecievedMsg(string msg, int id)
     {
         Debug.Log("msg recieved = " + msg + ".  connection id = " + id);
+
+        string[] verifyLogin = msg.Split(',');
+        loginStatus = verifyLogin[0];
+
+        if (loginStatus == "True")
+        {
+            loggedIntoAccount = true;
+        }
+        else if (loginStatus == "False")
+        {
+            loggedIntoAccount = false;
+        }
     }
 
     public bool IsConnected()
@@ -155,22 +175,17 @@ public class NetworkedClient : MonoBehaviour
     {
         GetUsernameAndPassword();
         SendMessageToHost("" + UserName + "," + PassWord);
-
-        //Switch state to run state
-       // currentState = GameStates.RunState;
-
-        //Hide main menu UI
-        //currentUI.SetActive(false);
-        //currentUI2.SetActive(false);
-
-        //Enable new UI
-        //newUI.SetActive(true); 
     }
 
-    public void CreateAccount()
+    public void StartGameLobby()
     {
-        GetUsernameAndPassword();
+        //Switch state to run state
+         currentState = GameStates.RunState;
 
-        SendMessageToHost("" + UserName + "," + PassWord);
+        //Hide main menu UI
+        currentUI.SetActive(false);
+
+        //Enable new UI
+        newUI.SetActive(true);
     }
 }

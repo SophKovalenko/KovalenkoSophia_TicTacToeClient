@@ -541,7 +541,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1154070639}
         m_TargetAssemblyTypeName: NetworkedClient, Assembly-CSharp
-        m_MethodName: CreateAccount
+        m_MethodName: VerifyAccount
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
