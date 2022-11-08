@@ -22,6 +22,7 @@ public class NetworkedClient : MonoBehaviour
 
     private GameStates currentState;
 
+    //Login Data ******************************************
     private string UserName;
     private string PassWord;
 
@@ -43,6 +44,11 @@ public class NetworkedClient : MonoBehaviour
 
     string loginStatus;
     bool loggedIntoAccount = false;
+    // ******************************************
+
+    //Game Room Data ******************************************
+    public TMP_InputField usersGameRoomInput;
+    private string gameRoomName;
 
     // Start is called before the first frame update
     void Start()
@@ -189,6 +195,12 @@ public class NetworkedClient : MonoBehaviour
         { accountCreatedUI.SetActive(true); }
     }
 
+    public void ClosePopupWindow()
+    {
+        wrongPasswordUI.SetActive(false);
+        accountCreatedUI.SetActive(false);
+    }
+
     public void StartGameLobby()
     {
         //Switch state to run state
@@ -201,9 +213,12 @@ public class NetworkedClient : MonoBehaviour
         successfulLoginUI.SetActive(true);
     }
 
-    public void ClosePopupWindow()
+    public void FindOrCreateGameRoom()
     {
-        wrongPasswordUI.SetActive(false);
-        accountCreatedUI.SetActive(false);
+        gameRoomName = usersGameRoomInput.text;
+
+        SendMessageToHost(gameRoomName);
+
+        usersGameRoomInput.text = "";
     }
 }
