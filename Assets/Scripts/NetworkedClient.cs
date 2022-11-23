@@ -48,6 +48,9 @@ public class NetworkedClient : MonoBehaviour
 
     //Game Room Data ******************************************
     public TMP_InputField usersGameRoomInput;
+    public GameObject gameRoomWaitingPanel;
+    public GameObject gameRoomPlayingPanel;
+    public GameRoom gameRoom;
     private string gameRoomName;
 
     // Start is called before the first frame update
@@ -220,5 +223,26 @@ public class NetworkedClient : MonoBehaviour
         SendMessageToHost(gameRoomName);
 
         usersGameRoomInput.text = "";
+
+        successfulLoginUI.SetActive(false);
+        gameRoomWaitingPanel.SetActive(true);
+
+        gameRoom.roomName = gameRoomName;
+        gameRoom.nameTextWaiting.text = gameRoomName;
+    }
+
+    public void BackToLobby()
+    {
+        if (gameRoomWaitingPanel.activeInHierarchy == true)
+        {
+            gameRoomWaitingPanel.SetActive(false);
+            successfulLoginUI.SetActive(true);
+        }
+
+        if (gameRoomPlayingPanel.activeInHierarchy == true)
+        {
+            gameRoomPlayingPanel.SetActive(false);
+            successfulLoginUI.SetActive(true);
+        }
     }
 }
