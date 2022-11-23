@@ -12,6 +12,8 @@ TagManager:
   - LoginPassword
   - NewUsername
   - NewPassword
+  - WaitingPanel
+  - PlayingPanel
   layers:
   - Default
   - TransparentFX

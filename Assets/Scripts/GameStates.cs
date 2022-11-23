@@ -7,6 +7,8 @@ public enum GameStates
 {
     StartState,
     RunState,
+    WaitingState,
+    PlayingState,
     ExitState
 }
 
