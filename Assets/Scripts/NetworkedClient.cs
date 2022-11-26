@@ -161,6 +161,11 @@ public class NetworkedClient : MonoBehaviour
             loggedIntoAccount = false;
             wrongPasswordUI.SetActive(true);
         }
+
+        if (msg == "StartGame")
+        {
+            StartGameRoom();
+        }
     }
 
     public bool IsConnected()
@@ -186,13 +191,13 @@ public class NetworkedClient : MonoBehaviour
     public void VerifyAccount()
     {
         GetUsernameAndPassword();
-        SendMessageToHost("" + UserName + "," + PassWord);
+        SendMessageToHost("Login" + "," + UserName + "," + PassWord);
     }
 
     public void CreateAccount()
     {
         GetUsernameAndPassword();
-        SendMessageToHost("" + UserName + "," + PassWord);
+        SendMessageToHost("CreateAccount" + "," + UserName + "," + PassWord);
 
         if (wrongPasswordUI.activeInHierarchy != true)
         { accountCreatedUI.SetActive(true); }
@@ -220,7 +225,7 @@ public class NetworkedClient : MonoBehaviour
     {
         gameRoomName = usersGameRoomInput.text;
 
-        SendMessageToHost(gameRoomName);
+        SendMessageToHost("JoinRoom" + "," + gameRoomName);
 
         usersGameRoomInput.text = "";
 
@@ -229,6 +234,12 @@ public class NetworkedClient : MonoBehaviour
 
         gameRoom.roomName = gameRoomName;
         gameRoom.nameTextWaiting.text = gameRoomName;
+    }
+
+    public void StartGameRoom()
+    {
+        gameRoomWaitingPanel.SetActive(false);
+        gameRoomPlayingPanel.SetActive(true);
     }
 
     public void BackToLobby()
