@@ -234,7 +234,7 @@ public class NetworkedClient : MonoBehaviour
         gameRoomWaitingPanel.SetActive(true);
 
         gameRoom.roomName = gameRoomName;
-        gameRoom.nameTextWaiting.text = gameRoomName;
+        gameRoom.nameTextWaiting.text = gameRoomName;   
     }
 
     public void StartGameRoom()
