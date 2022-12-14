@@ -167,6 +167,11 @@ public class NetworkedClient : MonoBehaviour
             StartGameRoom();
             Debug.Log("Got the start game msg!");
         }
+
+        if (msg == "Hello")
+        {
+            Debug.Log("Hello from your fellow player!!");
+        }
     }
 
     public bool IsConnected()
@@ -256,5 +261,10 @@ public class NetworkedClient : MonoBehaviour
             gameRoomPlayingPanel.SetActive(false);
             successfulLoginUI.SetActive(true);
         }
+    }
+
+    public void SendMessageToOtherPlayer()
+    {
+        SendMessageToHost("SendMessage");
     }
 }
