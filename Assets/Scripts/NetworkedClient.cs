@@ -254,12 +254,14 @@ public class NetworkedClient : MonoBehaviour
         {
             gameRoomWaitingPanel.SetActive(false);
             successfulLoginUI.SetActive(true);
+            SendMessageToHost("LeaveRoom");
         }
 
         if (gameRoomPlayingPanel.activeInHierarchy == true)
         {
             gameRoomPlayingPanel.SetActive(false);
             successfulLoginUI.SetActive(true);
+            SendMessageToHost("LeaveRoom");
         }
     }
 
