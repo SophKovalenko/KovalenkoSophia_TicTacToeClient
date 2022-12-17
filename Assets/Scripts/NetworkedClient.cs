@@ -20,32 +20,6 @@ public class NetworkedClient : MonoBehaviour
     bool isConnected = false;
     int ourClientID;
 
-    private GameStates currentState;
-
-    //Login Data ******************************************
-    private string UserName;
-    private string PassWord;
-
-    public TMP_InputField inputUserName;
-    public TMP_InputField inputPassWord;
-
-    public static string loginFileNames = "";
-
-    //Create a new list for usernames/ passwords
-    static List<string> fileNames = new List<string>();
-
-    public Button loginButton;
-    public Button createAccountButton;
-
-    private GameObject mainMenuUI;
-    public GameObject successfulLoginUI;
-    public GameObject accountCreatedUI;
-    public GameObject wrongPasswordUI;
-
-    string loginStatus;
-    bool loggedIntoAccount = false;
-    // ******************************************
-
     //Game Room Data ******************************************
     public TMP_InputField usersGameRoomInput;
     public GameObject gameRoomWaitingPanel;
@@ -56,10 +30,6 @@ public class NetworkedClient : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        mainMenuUI = GameObject.FindGameObjectWithTag("LoginPanel");
-
-        currentState = GameStates.StartState;
-
         Connect();
     }
 
@@ -67,12 +37,6 @@ public class NetworkedClient : MonoBehaviour
     void Update()
     {
         UpdateNetworkConnection();
-
-        if (loggedIntoAccount == true)
-        {
-            StartGameLobby();
-            loggedIntoAccount = false;
-        }
     }
 
     private void UpdateNetworkConnection()
@@ -90,17 +54,15 @@ public class NetworkedClient : MonoBehaviour
             switch (recNetworkEvent)
             {
                 case NetworkEventType.ConnectEvent:
-                    Debug.Log("connected.  " + recConnectionID);
-                    ourClientID = recConnectionID;
+                    NetworkedClientProcessing.ConnectionEvent();
                     break;
                 case NetworkEventType.DataEvent:
                     string msg = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
-                    ProcessRecievedMsg(msg, recConnectionID);
-                    Debug.Log("got msg = " + msg);
+                    NetworkedClientProcessing.ReceivedMessageFromServer(msg);
                     break;
                 case NetworkEventType.DisconnectEvent:
                     isConnected = false;
-                    Debug.Log("disconnected.  " + recConnectionID);
+                    NetworkedClientProcessing.DisconnectionEvent();
                     break;
             }
         }
@@ -122,7 +84,7 @@ public class NetworkedClient : MonoBehaviour
             hostID = NetworkTransport.AddHost(topology, 0);
             Debug.Log("Socket open.  Host ID = " + hostID);
 
-            connectionID = NetworkTransport.Connect(hostID, "10.0.218.134", socketPort, 0, out error); // server is local on network
+            connectionID = NetworkTransport.Connect(hostID, "192.168.0.107", socketPort, 0, out error); // server is local on network
 
             if (error == 0)
             {
@@ -130,6 +92,8 @@ public class NetworkedClient : MonoBehaviour
 
                 Debug.Log("Connected, id = " + connectionID);
             }
+            else
+                Debug.Log("Network client init failed!");
         }
     }
 
@@ -145,87 +109,11 @@ public class NetworkedClient : MonoBehaviour
         NetworkTransport.Send(hostID, connectionID, reliableChannelID, buffer, msg.Length * sizeof(char), out error);
     }
 
-    private void ProcessRecievedMsg(string msg, int id)
-    {
-        Debug.Log("msg recieved = " + msg + ".  connection id = " + id);
-
-        string[] verifyLogin = msg.Split(',');
-        loginStatus = verifyLogin[0];
-
-        if (loginStatus == "True")
-        {
-            loggedIntoAccount = true;
-        }
-        else if (loginStatus == "False")
-        {
-            loggedIntoAccount = false;
-            wrongPasswordUI.SetActive(true);
-        }
-
-        if (msg == "StartGame")
-        {
-            StartGameRoom();
-            Debug.Log("Got the start game msg!");
-        }
-
-        if (msg == "Hello")
-        {
-            Debug.Log("Hello from your fellow player!!");
-        }
-    }
-
     public bool IsConnected()
     {
         return isConnected;
     }
 
-
-    public void GetUsernameAndPassword()
-    {
-        //Get the login from playerPrefs
-        UserName = inputUserName.text;
-
-        //Get the password from playerPrefs
-        PassWord = inputPassWord.text;
-
-        //Clear the input fields
-        inputUserName.text = "";
-        inputPassWord.text = "";
-
-    }
-
-    public void VerifyAccount()
-    {
-        GetUsernameAndPassword();
-        SendMessageToHost("Login" + "," + UserName + "," + PassWord);
-    }
-
-    public void CreateAccount()
-    {
-        GetUsernameAndPassword();
-        SendMessageToHost("CreateAccount" + "," + UserName + "," + PassWord);
-
-        if (wrongPasswordUI.activeInHierarchy != true)
-        { accountCreatedUI.SetActive(true); }
-    }
-
-    public void ClosePopupWindow()
-    {
-        wrongPasswordUI.SetActive(false);
-        accountCreatedUI.SetActive(false);
-    }
-
-    public void StartGameLobby()
-    {
-        //Switch state to run state
-        currentState = GameStates.RunState;
-
-        //Hide main menu UI
-        mainMenuUI.SetActive(false);
-
-        //Enable new UI
-        successfulLoginUI.SetActive(true);
-    }
 
     public void FindOrCreateGameRoom()
     {
@@ -235,7 +123,7 @@ public class NetworkedClient : MonoBehaviour
 
         usersGameRoomInput.text = "";
 
-        successfulLoginUI.SetActive(false);
+        FindObjectOfType<LoginManager>().successfulLoginUI.SetActive(false);
         gameRoomWaitingPanel.SetActive(true);
 
         gameRoom.roomName = gameRoomName;
@@ -253,14 +141,14 @@ public class NetworkedClient : MonoBehaviour
         if (gameRoomWaitingPanel.activeInHierarchy == true)
         {
             gameRoomWaitingPanel.SetActive(false);
-            successfulLoginUI.SetActive(true);
+            FindObjectOfType<LoginManager>().successfulLoginUI.SetActive(true);
             SendMessageToHost("LeaveRoom");
         }
 
         if (gameRoomPlayingPanel.activeInHierarchy == true)
         {
             gameRoomPlayingPanel.SetActive(false);
-            successfulLoginUI.SetActive(true);
+            FindObjectOfType<LoginManager>().successfulLoginUI.SetActive(true);
             SendMessageToHost("LeaveRoom");
         }
     }

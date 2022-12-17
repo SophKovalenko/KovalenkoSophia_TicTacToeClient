@@ -939,8 +939,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1154070639}
-        m_TargetAssemblyTypeName: NetworkedClient, Assembly-CSharp
+      - m_Target: {fileID: 566139290}
+        m_TargetAssemblyTypeName: LoginManager, Assembly-CSharp
         m_MethodName: CreateAccount
         m_Mode: 1
         m_Arguments:
@@ -2499,6 +2499,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 543768690}
   m_CullTransparentMesh: 1
+--- !u!1 &566139289
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 566139291}
+  - component: {fileID: 566139290}
+  m_Layer: 0
+  m_Name: LoginManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &566139290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566139289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a1eb073bebc8394e898ddc56575bba8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputUserName: {fileID: 987218891}
+  inputPassWord: {fileID: 992131514}
+  loginButton: {fileID: 1007941118}
+  createAccountButton: {fileID: 64901342}
+  successfulLoginUI: {fileID: 391241770}
+  accountCreatedUI: {fileID: 2028194297}
+  wrongPasswordUI: {fileID: 1840523746}
+--- !u!4 &566139291
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566139289}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -57.356155, y: 4.4540944, z: 2138.9949}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &574314554
 GameObject:
   m_ObjectHideFlags: 0
@@ -4910,8 +4960,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1154070639}
-        m_TargetAssemblyTypeName: NetworkedClient, Assembly-CSharp
+      - m_Target: {fileID: 566139290}
+        m_TargetAssemblyTypeName: LoginManager, Assembly-CSharp
         m_MethodName: VerifyAccount
         m_Mode: 1
         m_Arguments:
@@ -5053,13 +5103,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5307224ddd0afc41b74620e829baa32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputUserName: {fileID: 987218891}
-  inputPassWord: {fileID: 992131514}
-  loginButton: {fileID: 1007941118}
-  createAccountButton: {fileID: 64901342}
-  successfulLoginUI: {fileID: 391241770}
-  accountCreatedUI: {fileID: 2028194297}
-  wrongPasswordUI: {fileID: 1840523746}
   usersGameRoomInput: {fileID: 142522171}
   gameRoomWaitingPanel: {fileID: 1470216244}
   gameRoomPlayingPanel: {fileID: 916380274}
