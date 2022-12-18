@@ -19,16 +19,15 @@ public class NetworkedClientProcessing : MonoBehaviour
         if (signifier == ServerToClientSignifiers.wrongPassword)
         {
             FindObjectOfType<LoginManager>().wrongPasswordUI.SetActive(true);
-
         }
         if (signifier == ServerToClientSignifiers.wrongUsername)
         {
             FindObjectOfType<LoginManager>().usernameTakenUI.SetActive(true);
         }
-        //if (signifier == ServerToClientSignifiers.startGame)
-        //{ 
-
-        //}
+        if (signifier == ServerToClientSignifiers.startGame)
+        {
+            FindObjectOfType<GameRoomManager>().StartGameRoom();
+        }
         //else if (signifier == ServerToClientSignifiers.helloFromOtherPlayer)
         //{
         //    //gameLogic.DestroyBalloon(int.Parse(csv[1]));
@@ -93,7 +92,10 @@ static public class ClientToServerSignifiers
 {
     public const int verifyLogin = 1;
     public const int createAccount = 2;
-    public const int playerHasLeftMatch = 3;
+    public const int joinRoom = 3;
+    public const int leaveRoom = 4;
+    public const int sendMsg = 5;
+    public const int playerHasLeftMatch = 6;
 }
 
 static public class ServerToClientSignifiers

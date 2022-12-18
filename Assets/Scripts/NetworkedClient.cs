@@ -9,7 +9,6 @@ using System.IO;
 
 public class NetworkedClient : MonoBehaviour
 {
-
     int connectionID;
     int maxConnections = 1000;
     int reliableChannelID;
@@ -19,13 +18,6 @@ public class NetworkedClient : MonoBehaviour
     byte error;
     bool isConnected = false;
     int ourClientID;
-
-    //Game Room Data ******************************************
-    public TMP_InputField usersGameRoomInput;
-    public GameObject gameRoomWaitingPanel;
-    public GameObject gameRoomPlayingPanel;
-    public GameRoom gameRoom;
-    private string gameRoomName;
 
     // Start is called before the first frame update
     void Start()
@@ -108,47 +100,4 @@ public class NetworkedClient : MonoBehaviour
         return isConnected;
     }
 
-
-    public void FindOrCreateGameRoom()
-    {
-        gameRoomName = usersGameRoomInput.text;
-
-        SendMessageToServer("JoinRoom" + "," + gameRoomName);
-
-        usersGameRoomInput.text = "";
-
-        FindObjectOfType<LoginManager>().successfulLoginUI.SetActive(false);
-        gameRoomWaitingPanel.SetActive(true);
-
-        gameRoom.roomName = gameRoomName;
-        gameRoom.nameTextWaiting.text = gameRoomName;   
-    }
-
-    public void StartGameRoom()
-    {
-        gameRoomWaitingPanel.SetActive(false);
-        gameRoomPlayingPanel.SetActive(true);
-    }
-
-    public void BackToLobby()
-    {
-        if (gameRoomWaitingPanel.activeInHierarchy == true)
-        {
-            gameRoomWaitingPanel.SetActive(false);
-            FindObjectOfType<LoginManager>().successfulLoginUI.SetActive(true);
-            SendMessageToServer("LeaveRoom");
-        }
-
-        if (gameRoomPlayingPanel.activeInHierarchy == true)
-        {
-            gameRoomPlayingPanel.SetActive(false);
-            FindObjectOfType<LoginManager>().successfulLoginUI.SetActive(true);
-            SendMessageToServer("LeaveRoom");
-        }
-    }
-
-    public void SendMessageToOtherPlayer()
-    {
-        SendMessageToServer("SendMessage");
-    }
 }

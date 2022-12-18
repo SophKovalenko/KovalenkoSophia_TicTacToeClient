@@ -674,8 +674,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1154070639}
-        m_TargetAssemblyTypeName: NetworkedClient, Assembly-CSharp
+      - m_Target: {fileID: 1153941440}
+        m_TargetAssemblyTypeName: GameRoomManager, Assembly-CSharp
         m_MethodName: BackToLobby
         m_Mode: 1
         m_Arguments:
@@ -807,8 +807,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1154070639}
-        m_TargetAssemblyTypeName: NetworkedClient, Assembly-CSharp
+      - m_Target: {fileID: 1153941440}
+        m_TargetAssemblyTypeName: GameRoomManager, Assembly-CSharp
         m_MethodName: BackToLobby
         m_Mode: 1
         m_Arguments:
@@ -5305,8 +5305,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1154070639}
-        m_TargetAssemblyTypeName: NetworkedClient, Assembly-CSharp
+      - m_Target: {fileID: 1153941440}
+        m_TargetAssemblyTypeName: GameRoomManager, Assembly-CSharp
         m_MethodName: FindOrCreateGameRoom
         m_Mode: 1
         m_Arguments:
@@ -5509,6 +5509,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1153941438}
   - component: {fileID: 1153941439}
+  - component: {fileID: 1153941440}
   m_Layer: 5
   m_Name: GameRoom
   m_TagString: Untagged
@@ -5552,6 +5553,22 @@ MonoBehaviour:
   roomName: 
   nameTextWaiting: {fileID: 2083954246}
   nameTextPlaying: {fileID: 1635273949}
+--- !u!114 &1153941440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1153941437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e74bbb74685c7664aa4f56b79e7285b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usersGameRoomInput: {fileID: 142522171}
+  gameRoomWaitingPanel: {fileID: 1470216244}
+  gameRoomPlayingPanel: {fileID: 916380274}
+  gameRoom: {fileID: 1153941439}
 --- !u!1 &1154070638
 GameObject:
   m_ObjectHideFlags: 0
@@ -5581,10 +5598,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5307224ddd0afc41b74620e829baa32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  usersGameRoomInput: {fileID: 142522171}
-  gameRoomWaitingPanel: {fileID: 1470216244}
-  gameRoomPlayingPanel: {fileID: 916380274}
-  gameRoom: {fileID: 1153941439}
 --- !u!4 &1154070640
 Transform:
   m_ObjectHideFlags: 0
