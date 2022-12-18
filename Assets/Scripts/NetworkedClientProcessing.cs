@@ -12,27 +12,32 @@ public class NetworkedClientProcessing : MonoBehaviour
         string[] csv = msg.Split(',');
         int signifier = int.Parse(csv[0]);
 
-        if (signifier == ServerToClientSignifiers.verifyLogin)
+        if (signifier == ServerToClientSignifiers.loginSuccessful)
         {
-            float screenPositionXPercent = float.Parse(csv[1]);
-            float screenPositionYPercent = float.Parse(csv[2]);
-            int balloonID = int.Parse(csv[3]);
-            Vector2 screenPosition = new Vector2(screenPositionXPercent * (float)Screen.width, screenPositionYPercent * (float)Screen.height);
-          //  gameLogic.SpawnNewBalloon(screenPosition, balloonID);
+            FindObjectOfType<LoginManager>().StartGameLobby();
         }
-        if (signifier == ServerToClientSignifiers.startGame)
-        { 
-        
-        }
-        else if (signifier == ServerToClientSignifiers.helloFromOtherPlayer)
+        if (signifier == ServerToClientSignifiers.wrongPassword)
         {
-            //gameLogic.DestroyBalloon(int.Parse(csv[1]));
+            FindObjectOfType<LoginManager>().wrongPasswordUI.SetActive(true);
+
         }
+        if (signifier == ServerToClientSignifiers.wrongUsername)
+        {
+            FindObjectOfType<LoginManager>().usernameTakenUI.SetActive(true);
+        }
+        //if (signifier == ServerToClientSignifiers.startGame)
+        //{ 
+
+        //}
+        //else if (signifier == ServerToClientSignifiers.helloFromOtherPlayer)
+        //{
+        //    //gameLogic.DestroyBalloon(int.Parse(csv[1]));
+        //}
     }
 
     static public void SendMessageToServer(string msg)
     {
-        networkedClient.SendMessageToHost(msg);
+        networkedClient.SendMessageToServer(msg);
     }
 
     #endregion
@@ -86,15 +91,18 @@ public class NetworkedClientProcessing : MonoBehaviour
 #region Protocol Signifiers
 static public class ClientToServerSignifiers
 {
-    public const int balloonClicked = 1;
-    public const int playerHasLeftMatch = 2;
+    public const int verifyLogin = 1;
+    public const int createAccount = 2;
+    public const int playerHasLeftMatch = 3;
 }
 
 static public class ServerToClientSignifiers
 {
-    public const int verifyLogin = 1;
-    public const int startGame = 2;
-    public const int helloFromOtherPlayer = 3;
+    public const int loginSuccessful = 1;
+    public const int wrongPassword = 2;
+    public const int wrongUsername = 3;
+    public const int startGame = 4;
+    public const int helloFromOtherPlayer = 5;
 }
 
 #endregion
@@ -102,20 +110,7 @@ static public class ServerToClientSignifiers
 
 //private void ProcessRecievedMsg(string msg, int id)
 //{
-//    Debug.Log("msg recieved = " + msg + ".  connection id = " + id);
 
-//    string[] verifyLogin = msg.Split(',');
-//    loginStatus = verifyLogin[0];
-
-//    if (loginStatus == "True")
-//    {
-//        loggedIntoAccount = true;
-//    }
-//    else if (loginStatus == "False")
-//    {
-//        loggedIntoAccount = false;
-//        wrongPasswordUI.SetActive(true);
-//    }
 
 //    if (msg == "StartGame")
 //    {

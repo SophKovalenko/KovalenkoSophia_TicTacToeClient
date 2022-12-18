@@ -27,6 +27,7 @@ public class LoginManager : MonoBehaviour
     public GameObject successfulLoginUI;
     public GameObject accountCreatedUI;
     public GameObject wrongPasswordUI;
+    public GameObject usernameTakenUI;
 
     string loginStatus;
     bool loggedIntoAccount = false;
@@ -37,15 +38,6 @@ public class LoginManager : MonoBehaviour
         mainMenuUI = GameObject.FindGameObjectWithTag("LoginPanel");
 
         currentState = GameStates.StartState;
-    }
-
-    void Update()
-    {
-        if (loggedIntoAccount == true)
-        {
-            //StartGameLobby();
-            loggedIntoAccount = false;
-        }
     }
 
     public void GetUsernameAndPassword()
@@ -65,13 +57,13 @@ public class LoginManager : MonoBehaviour
     public void VerifyAccount()
     {
         GetUsernameAndPassword();
-        NetworkedClientProcessing.SendMessageToServer("Login" + "," + UserName + "," + PassWord);
+        NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.verifyLogin + "," + UserName + "," + PassWord);
     }
 
     public void CreateAccount()
     {
         GetUsernameAndPassword();
-        NetworkedClientProcessing.SendMessageToServer("CreateAccount" + "," + UserName + "," + PassWord);
+        NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.createAccount + "," + UserName + "," + PassWord);
 
         if (wrongPasswordUI.activeInHierarchy != true)
         { accountCreatedUI.SetActive(true); }
@@ -80,6 +72,7 @@ public class LoginManager : MonoBehaviour
     public void ClosePopupWindow()
     {
         wrongPasswordUI.SetActive(false);
+        usernameTakenUI.SetActive(false);
         accountCreatedUI.SetActive(false);
     }
 

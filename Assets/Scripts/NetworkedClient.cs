@@ -30,16 +30,21 @@ public class NetworkedClient : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Connect();
+        if (NetworkedClientProcessing.GetNetworkedClient() == null)
+        {
+            DontDestroyOnLoad(this.gameObject);
+            NetworkedClientProcessing.SetNetworkedClient(this);
+            Connect();
+        }
+        else
+        {
+            Debug.Log("Singleton-ish architecture violation detected, investigate where NetworkedClient.cs Start() is being called.  Are you creating a second instance of the NetworkedClient game object or has the NetworkedClient.cs been attached to more than one game object?");
+            Destroy(this.gameObject);
+        }
     }
 
     // Update is called once per frame
     void Update()
-    {
-        UpdateNetworkConnection();
-    }
-
-    private void UpdateNetworkConnection()
     {
         if (isConnected)
         {
@@ -67,30 +72,22 @@ public class NetworkedClient : MonoBehaviour
             }
         }
     }
-
-    private void Connect()
+    public void Connect()
     {
-
         if (!isConnected)
         {
-            Debug.Log("Attempting to create connection");
-
             NetworkTransport.Init();
-
             ConnectionConfig config = new ConnectionConfig();
             reliableChannelID = config.AddChannel(QosType.Reliable);
             unreliableChannelID = config.AddChannel(QosType.Unreliable);
             HostTopology topology = new HostTopology(config, maxConnections);
             hostID = NetworkTransport.AddHost(topology, 0);
-            Debug.Log("Socket open.  Host ID = " + hostID);
-
             connectionID = NetworkTransport.Connect(hostID, "192.168.0.107", socketPort, 0, out error); // server is local on network
 
             if (error == 0)
             {
                 isConnected = true;
-
-                Debug.Log("Connected, id = " + connectionID);
+                Debug.Log("Network client init successful, waiting for server connection.");
             }
             else
                 Debug.Log("Network client init failed!");
@@ -100,15 +97,12 @@ public class NetworkedClient : MonoBehaviour
     public void Disconnect()
     {
         NetworkTransport.Disconnect(hostID, connectionID, out error);
-        Debug.Log("Disconnecting from server");
     }
-
-    public void SendMessageToHost(string msg)
+    public void SendMessageToServer(string msg)
     {
         byte[] buffer = Encoding.Unicode.GetBytes(msg);
         NetworkTransport.Send(hostID, connectionID, reliableChannelID, buffer, msg.Length * sizeof(char), out error);
     }
-
     public bool IsConnected()
     {
         return isConnected;
@@ -119,7 +113,7 @@ public class NetworkedClient : MonoBehaviour
     {
         gameRoomName = usersGameRoomInput.text;
 
-        SendMessageToHost("JoinRoom" + "," + gameRoomName);
+        SendMessageToServer("JoinRoom" + "," + gameRoomName);
 
         usersGameRoomInput.text = "";
 
@@ -142,19 +136,19 @@ public class NetworkedClient : MonoBehaviour
         {
             gameRoomWaitingPanel.SetActive(false);
             FindObjectOfType<LoginManager>().successfulLoginUI.SetActive(true);
-            SendMessageToHost("LeaveRoom");
+            SendMessageToServer("LeaveRoom");
         }
 
         if (gameRoomPlayingPanel.activeInHierarchy == true)
         {
             gameRoomPlayingPanel.SetActive(false);
             FindObjectOfType<LoginManager>().successfulLoginUI.SetActive(true);
-            SendMessageToHost("LeaveRoom");
+            SendMessageToServer("LeaveRoom");
         }
     }
 
     public void SendMessageToOtherPlayer()
     {
-        SendMessageToHost("SendMessage");
+        SendMessageToServer("SendMessage");
     }
 }
