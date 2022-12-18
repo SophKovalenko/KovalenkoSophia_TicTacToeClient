@@ -28,6 +28,11 @@ public class NetworkedClientProcessing : MonoBehaviour
         {
             FindObjectOfType<GameRoomManager>().StartGameRoom();
         }
+        if (signifier == ServerToClientSignifiers.gameDraw)
+        {
+            gameLogic.SetGameOverText("It's a draw!");
+        }
+
         //else if (signifier == ServerToClientSignifiers.helloFromOtherPlayer)
         //{
         //    //gameLogic.DestroyBalloon(int.Parse(csv[1]));
@@ -96,15 +101,26 @@ static public class ClientToServerSignifiers
     public const int leaveRoom = 4;
     public const int sendMsg = 5;
     public const int playerHasLeftMatch = 6;
+    //During Game
+    public const int turnTaken = 7;
 }
 
 static public class ServerToClientSignifiers
 {
+    //Login
     public const int loginSuccessful = 1;
     public const int wrongPassword = 2;
     public const int wrongUsername = 3;
+
+    //Gamr Room
     public const int startGame = 4;
     public const int helloFromOtherPlayer = 5;
+
+    //During Game
+    public const int sideAssignment = 6;
+    public const int changeTurn = 7;
+    public const int gameDraw = 8;
+
 }
 
 #endregion

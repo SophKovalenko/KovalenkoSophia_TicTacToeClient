@@ -12,14 +12,11 @@ public class GameLogic : MonoBehaviour
     public GameObject gameOverPanel; 
     public TMP_Text gameOverText;
 
-    private int turnsTaken;
-
     private void Awake()
     {
         gameOverPanel.SetActive(false);
         SetGameControllerRefForButtons();
         playerChoice = PlayerCharacterString.X;
-        turnsTaken = 0;
     }
 
     void SetGameControllerRefForButtons()
@@ -76,14 +73,10 @@ public class GameLogic : MonoBehaviour
             GameOver();
         }
 
-        turnsTaken++;
+        //Tell the server to increment the turns taken variable
+        NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.turnTaken + ",");
 
-        if (turnsTaken >= 9) 
-{
-            SetGameOverText("It's a draw!");
-        }
-
-        ChangeTurn();
+        //ChangeTurn();
     }
 
     void GameOver()
@@ -93,22 +86,17 @@ public class GameLogic : MonoBehaviour
         SetGameOverText(playerChoice.ToString() + " wins the game!");
     }
 
-    void ChangeTurn()
-    {
-        //If player is X, change to O or vise versa
-        playerChoice = (playerChoice == PlayerCharacterString.X) ? PlayerCharacterString.O : PlayerCharacterString.X;
-    }
-
-    void SetGameOverText(string value)
+    public void SetGameOverText(string value)
     {
         gameOverPanel.SetActive(true);
         gameOverText.text = value;
     }
 
+    //Server sends msg to do this
     public void RestartGame()
     {
         playerChoice = PlayerCharacterString.X;
-        turnsTaken = 0;
+       // turnsTaken = 0;
         gameOverPanel.SetActive(false);
 
         for (int i = 0; i < buttonList.Length; i++)
@@ -122,7 +110,7 @@ public class GameLogic : MonoBehaviour
     {
         for (int i = 0; i < buttonList.Length; i++)
         {
-            //Disable all buttons if the game has ended
+            //Disable all buttons if the game has ended or if other players turn
             buttonList[i].GetComponentInParent<Button>().interactable = toggle;
         }
     }
