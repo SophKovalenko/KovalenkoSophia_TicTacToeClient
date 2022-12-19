@@ -23,6 +23,7 @@ public class GridSquare : MonoBehaviour
         buttonText.text = gameController.GetPlayerChoice().ToString();
         button.interactable = false;
         gameController.EndTurn();
+        FindObjectOfType<GameLogic>().buttonPressed = this.button;
     }
 
     public void SetGameControllerRef(GameLogic gameLogic)

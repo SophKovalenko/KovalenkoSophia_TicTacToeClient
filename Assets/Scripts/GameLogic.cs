@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class GameLogic : MonoBehaviour
 {
     public TMP_Text[] buttonList;
-    private PlayerCharacterString playerChoice;
+    public Button buttonPressed;
+    public PlayerCharacterString playerChoice;
 
     public GameObject gameOverPanel; 
     public TMP_Text gameOverText;
@@ -16,7 +17,6 @@ public class GameLogic : MonoBehaviour
     {
         gameOverPanel.SetActive(false);
         SetGameControllerRefForButtons();
-        playerChoice = PlayerCharacterString.X;
     }
 
     void SetGameControllerRefForButtons()
@@ -32,54 +32,22 @@ public class GameLogic : MonoBehaviour
         return playerChoice;
     }
 
+    public void StartTurn()
+    {
+        SetBoardInteractable(true);
+    }
+
     //Check all possible combinations for a win
     public void EndTurn()
     {
-        //Check all the rows
-        if (buttonList[0].text == playerChoice.ToString() && buttonList[1].text == playerChoice.ToString() && buttonList[2].text == playerChoice.ToString())
-        {
-            GameOver();
-        }
-        if (buttonList[3].text == playerChoice.ToString() && buttonList[4].text == playerChoice.ToString() && buttonList[5].text == playerChoice.ToString())
-        {
-            GameOver();
-        }
-        if (buttonList[6].text == playerChoice.ToString() && buttonList[7].text == playerChoice.ToString() && buttonList[8].text == playerChoice.ToString())
-        {
-            GameOver();
-        }
+        //Tell the server which button was clicked/ to increment the turns taken variable
+        NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.turnTaken + "," + buttonPressed.name);
 
-        //Check all the colomns
-        if (buttonList[0].text == playerChoice.ToString() && buttonList[3].text == playerChoice.ToString() && buttonList[6].text == playerChoice.ToString())
-        {
-            GameOver();
-        }
-        if (buttonList[1].text == playerChoice.ToString() && buttonList[4].text == playerChoice.ToString() && buttonList[7].text == playerChoice.ToString())
-        {
-            GameOver();
-        }
-        if (buttonList[2].text == playerChoice.ToString() && buttonList[5].text == playerChoice.ToString() && buttonList[8].text == playerChoice.ToString())
-        {
-            GameOver();
-        }
-
-        //Check all the diagonals
-        if (buttonList[0].text == playerChoice.ToString() && buttonList[4].text == playerChoice.ToString() && buttonList[8].text == playerChoice.ToString())
-        {
-            GameOver();
-        }
-        if (buttonList[2].text == playerChoice.ToString() && buttonList[4].text == playerChoice.ToString() && buttonList[6].text == playerChoice.ToString())
-        {
-            GameOver();
-        }
-
-        //Tell the server to increment the turns taken variable
-        NetworkedClientProcessing.SendMessageToServer(ClientToServerSignifiers.turnTaken + ",");
-
-        //ChangeTurn();
+        //Diable input if no longer this player's turn
+        SetBoardInteractable(false);
     }
 
-    void GameOver()
+    public void GameOver()
     {
         SetBoardInteractable(false);
         gameOverPanel.SetActive(true);
@@ -92,11 +60,9 @@ public class GameLogic : MonoBehaviour
         gameOverText.text = value;
     }
 
-    //Server sends msg to do this
+    //Have this called on UI button click in scene 
     public void RestartGame()
     {
-        playerChoice = PlayerCharacterString.X;
-       // turnsTaken = 0;
         gameOverPanel.SetActive(false);
 
         for (int i = 0; i < buttonList.Length; i++)

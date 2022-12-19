@@ -12,6 +12,7 @@ public class NetworkedClientProcessing : MonoBehaviour
         string[] csv = msg.Split(',');
         int signifier = int.Parse(csv[0]);
 
+        // LOGIN INFO
         if (signifier == ServerToClientSignifiers.loginSuccessful)
         {
             FindObjectOfType<LoginManager>().StartGameLobby();
@@ -24,19 +25,59 @@ public class NetworkedClientProcessing : MonoBehaviour
         {
             FindObjectOfType<LoginManager>().usernameTakenUI.SetActive(true);
         }
+
+        //GAMEROOM INFO
         if (signifier == ServerToClientSignifiers.startGame)
         {
             FindObjectOfType<GameRoomManager>().StartGameRoom();
+        }
+
+        //GAMEPLAY INFO
+        if (signifier == ServerToClientSignifiers.sideAssignment)
+        {
+            if (csv[1].ToString() == "X")
+            { gameLogic.playerChoice = PlayerCharacterString.X; }
+
+            if (csv[1].ToString() == "O")
+            { gameLogic.playerChoice = PlayerCharacterString.O; }
+        }
+        if (signifier == ServerToClientSignifiers.buttonPressed)
+        {
+            //Change the button to pressed for both players
+            for (int i = 0; i < gameLogic.buttonList.Length; i++)
+            {
+                if (gameLogic.buttonList[i].text == csv[1])
+                {
+                    gameLogic.buttonList[i].GetComponentInParent<GridSquare>().ChangeSquare();
+                }
+            }
+        }
+        if (signifier == ServerToClientSignifiers.changeTurn)
+        {
+            if (gameLogic.playerChoice.ToString() == csv[1])
+            {
+                gameLogic.StartTurn();
+            }
+        }
+        if (signifier == ServerToClientSignifiers.gameOver)
+        {
+            if (csv[1].ToString() == "X")
+            { gameLogic.playerChoice = PlayerCharacterString.X; }
+
+            if (csv[1].ToString() == "O")
+            { gameLogic.playerChoice = PlayerCharacterString.O; }
+
+            //Display who won the game based on the player choice passed back from server and display in win text
+            gameLogic.GameOver();
         }
         if (signifier == ServerToClientSignifiers.gameDraw)
         {
             gameLogic.SetGameOverText("It's a draw!");
         }
-
-        //else if (signifier == ServerToClientSignifiers.helloFromOtherPlayer)
-        //{
-        //    //gameLogic.DestroyBalloon(int.Parse(csv[1]));
-        //}
+        else if (signifier == ServerToClientSignifiers.helloFromOtherPlayer)
+        {
+            Debug.Log("Hello from your fellow player!!");
+        }
     }
 
     static public void SendMessageToServer(string msg)
@@ -118,26 +159,10 @@ static public class ServerToClientSignifiers
 
     //During Game
     public const int sideAssignment = 6;
-    public const int changeTurn = 7;
-    public const int gameDraw = 8;
-
+    public const int buttonPressed = 7;
+    public const int changeTurn = 8;
+    public const int gameDraw = 9;
+    public const int gameOver = 10;
 }
 
 #endregion
-
-
-//private void ProcessRecievedMsg(string msg, int id)
-//{
-
-
-//    if (msg == "StartGame")
-//    {
-//        StartGameRoom();
-//        Debug.Log("Got the start game msg!");
-//    }
-
-//    if (msg == "Hello")
-//    {
-//        Debug.Log("Hello from your fellow player!!");
-//    }
-//}
